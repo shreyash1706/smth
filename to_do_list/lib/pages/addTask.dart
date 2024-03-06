@@ -8,7 +8,7 @@ import 'package:to_do_list/services/firestore.dart';
 
 
 class Task {
-  String id;
+  
   final String title;
   final String description;
   final DateTime? dueDate;
@@ -18,7 +18,7 @@ class Task {
   final String? list;
 
   Task({
-    this.id = '' ,
+    
     required this.title,
     required this.description,
     this.dueDate,
@@ -29,7 +29,7 @@ class Task {
   });
 
   Map<String , dynamic> toJson()=>{
-    'id':id,
+    
     'title':title,
     'description':description,
     'dueDate':dueDate,
@@ -170,7 +170,7 @@ class _AddTaskScreenState extends State<AddTask> {
                   final description = _descriptionController.text;
                   if (title.isNotEmpty) {
                     Map<String,dynamic> taskMap = {
-                        'id': '',
+                        
                         'title': title,
                         'description': description,
                         'due': DateTime(_selectedDate!.year,_selectedDate!.month,_selectedDate!.day,_selectedTime!.hour,_selectedTime!.minute),

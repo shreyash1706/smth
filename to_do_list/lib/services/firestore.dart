@@ -1,15 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class FireStoreServices{
-  final Taskdoc =FirebaseFirestore.instance.collection('Tasks').doc();
+  final taskdoc =FirebaseFirestore.instance.collection('Tasks');
 
   //CREATE
   Future createTask(Map <String,dynamic> taskMap) async{
     
-    taskMap['id']= Taskdoc.id;
-
+    // taskMap['id']= Taskdoc.id;
     //create document and write data to firebase
-    await Taskdoc.set(taskMap);
+    await taskdoc.add(taskMap);
+  }
+
+  //READ
+  Stream<QuerySnapshot> getTasks()  {
+    final taskStream= taskdoc.orderBy("due").snapshots();
+    return  taskStream;
   }
 }
 
