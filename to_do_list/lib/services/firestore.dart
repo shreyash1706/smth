@@ -17,6 +17,14 @@ class FireStoreServices{
     final taskStream= taskdoc.orderBy("due").snapshots();
     return  taskStream;
   }
+
+  //UPDATE
+  //get single document
+  Future getTask({required  docID}) async{
+    return taskdoc.doc(docID);
+  }
+
+  
 }
 
 
