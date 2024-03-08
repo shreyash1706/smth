@@ -6,7 +6,7 @@ import 'package:to_do_list/pages/settings.dart';
 import 'package:to_do_list/services/firestore.dart';
 import 'package:to_do_list/widgets/streak_counter.dart';
 import 'package:to_do_list/widgets/task_wigdet.dart';
-
+import 'package:intl/intl.dart';
 class home extends StatefulWidget {
   const home({super.key});
 
@@ -16,26 +16,11 @@ class home extends StatefulWidget {
 
 class _homeState extends State<home> {
 
-  void OpenUpdateBox({required docID}){
-    
-  }
+  
   @override
   Widget build(BuildContext context) {
     var _mediaQuery = MediaQuery.of(context).size;
-    // Stream? taskStream;
-
-    // getontheload() async{
-    //   taskStream=await FireStoreServices().getTasks();
-    //   setState(() {
-        
-    //   });
-    // }
-
-    // @override
-    // void initState(){
-    //   getontheload();
-    //   super.initState();
-    // }
+    
 
     return DefaultTabController(
         initialIndex: 0,
@@ -97,6 +82,7 @@ class _homeState extends State<home> {
                   DocumentSnapshot dS = snapshot.data!.docs[index];
                   String docID = dS.id;
                   return TaskWidget(
+                    docID: docID,
                     title: dS['title'],
                     description: dS['description'],
                     due: dS['due'],

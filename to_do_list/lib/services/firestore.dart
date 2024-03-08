@@ -19,12 +19,11 @@ class FireStoreServices{
   }
 
   //UPDATE
-  //get single document
-  Future getTask({required  docID}) async{
-    return taskdoc.doc(docID);
-  }
+  Future getTask({required docID}) async{
+    return await taskdoc.doc(docID);
+  }  
+}
 
   
-}
 
 

@@ -86,7 +86,7 @@ class _AddTaskScreenState extends State<AddTask> {
               SizedBox(height: 16.0),
               Row(
                 children: [
-                  Text('Due Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate!) ?? "Not set"}'),
+                  Text('Due Date: ${DateFormat('dd/MM/yyyy').format(_selectedDate!)}'),
                   IconButton(
                     icon: Icon(Icons.calendar_today),
                     onPressed: () async {
