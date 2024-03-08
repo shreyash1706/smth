@@ -19,9 +19,14 @@ class FireStoreServices{
   }
 
   //UPDATE
-  Future getTask({required docID}) async{
-    return await taskdoc.doc(docID);
-  }  
+  Future<void> UpdateTask (String docID,Map <String,dynamic> newTaskMap) async{
+    return await taskdoc.doc(docID).update(newTaskMap);
+  }
+
+  //DELETE
+  Future<void> DeleteTask(String docID){
+    return taskdoc.doc(docID).delete();
+  }
 }
 
   
