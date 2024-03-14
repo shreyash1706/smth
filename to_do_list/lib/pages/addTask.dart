@@ -16,6 +16,7 @@ class Task {
   final DateTime? due;
   final String? repetition;
   final String? list;
+  final bool isTaskCompleted=false;
 
   Task({
     
@@ -53,6 +54,7 @@ class _AddTaskScreenState extends State<AddTask> {
   TimeOfDay? _selectedTime;
   String? _selectedRepetition;
   String? _selectedList;
+  final bool isTaskCompleted=false;
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +178,7 @@ class _AddTaskScreenState extends State<AddTask> {
                         'due': DateTime(_selectedDate!.year,_selectedDate!.month,_selectedDate!.day,_selectedTime!.hour,_selectedTime!.minute),
                         'repetition': _selectedRepetition,
                         'list': _selectedList,
+                        'completed': isTaskCompleted,
                   };
                       FireStoreServices().createTask(taskMap).then((value) {
                           ScaffoldMessenger.of(context).showSnackBar(

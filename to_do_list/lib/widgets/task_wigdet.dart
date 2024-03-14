@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-
+//TODO: null checking for this widget
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_list/services/firestore.dart';
 
@@ -37,11 +36,42 @@ class _TaskWidgetState extends State<TaskWidget> {
   String? _selectedList;
 
   @override
+  void initState() {
+    super.initState();
+    _initializeControllers();
+  }
+
+  @override
+  void didUpdateWidget(TaskWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.title != oldWidget.title ||
+        widget.description != oldWidget.description) {
+      _initializeControllers();
+    }
+  }
+
+  void _initializeControllers() {
+    _titleController.text = widget.title;
+    _descriptionController.text = widget.description;
+    var due = widget.due;
+    _selectedDate = due.toDate();
+    _selectedTime =
+        TimeOfDay(hour: _selectedDate!.hour, minute: _selectedDate!.minute);
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _selectedList = widget.list;
     _selectedRepetition = widget.repetition;
-    _titleController.text = widget.title;
-    _descriptionController.text = widget.description;
+    // _titleController.text = widget.title;
+    // _descriptionController.text = widget.description;
 
     var due = widget.due;
     _selectedDate = due.toDate();
@@ -179,8 +209,9 @@ class _TaskWidgetState extends State<TaskWidget> {
                                   'repetition': _selectedRepetition,
                                   'list': _selectedList,
                                 };
-                                FireStoreServices().UpdateTask(docID, newTaskMap).then((value) => Navigator.pop(context));
-                               
+                                FireStoreServices()
+                                    .UpdateTask(docID, newTaskMap)
+                                    .then((value) => Navigator.pop(context));
                               },
                               child: Text("Update")),
                         )
@@ -191,79 +222,113 @@ class _TaskWidgetState extends State<TaskWidget> {
               ));
     }
 
-    return Padding(
-      padding: const EdgeInsets.all(1),
-      child: Container(
-        // height: MediaQuery.of(context).size.height * 0.15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Card(
-              shadowColor: Colors.blueGrey,
-              elevation: 5,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
+    void OpenViewBox({required docID}) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text('Task Description'),
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    //TODO: bold the start using rich text
+                    Text('Title: ${widget.title}'),
+                    Text('Description: ${widget.description}'),
                     Row(
                       children: [
-                        Checkbox(
-                          checkColor: Colors.white,
-                          fillColor:
-                              MaterialStateProperty.resolveWith(getColor),
-                          value: isChecked,
-                          shape: CircleBorder(),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
+                        Text(
+                          '$dueDate ,',
+                          // style: TextStyle(fontSize: 17),
                         ),
-                        SizedBox(width: 8),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.title,
-                                style: TextStyle(fontSize: 20),
-                                textAlign: TextAlign.left,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    '$dueDate ,',
-                                    style: TextStyle(fontSize: 17),
-                                  ),
-                                  // SizedBox(width: 3),
-                                  Text(
-                                    _selectedTime!.format(context),
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ]),
-                        Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            OpenUpdateBox(docID: widget.docID);
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            FireStoreServices().DeleteTask(widget.docID);
-                          },
+                        // SizedBox(width: 3),
+                        Text(
+                          _selectedTime!.format(context),
+                          // style: TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
+                    Text('Repetitions: ${widget.repetition}'),
+                    Text('Task type: ${widget.list}'),
+                    Center(
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('OK')),
+                    )
                   ],
                 ),
+              ));
+    }
+
+    return GestureDetector(
+      onLongPress: () {
+        OpenViewBox(docID: widget.docID);
+      },
+      child: Card(
+        shadowColor: Colors.blueGrey,
+        elevation: 5,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Row(
+                children: [
+                  Checkbox(
+                    checkColor: Colors.white,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: isChecked,
+                    shape: CircleBorder(),
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value!;
+                        if (isChecked == true) {
+                          FireStoreServices().TaskChecked(widget.docID);
+                        }
+                      });
+                    },
+                  ),
+                  SizedBox(width: 8),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: TextStyle(fontSize: 20),
+                          textAlign: TextAlign.left,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              '$dueDate ,',
+                              style: TextStyle(fontSize: 17),
+                            ),
+                            // SizedBox(width: 3),
+                            Text(
+                              _selectedTime!.format(context),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ]),
+                  Spacer(),
+                  IconButton(
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      OpenUpdateBox(docID: widget.docID);
+                    },
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      FireStoreServices().DeleteTask(widget.docID);
+                    },
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

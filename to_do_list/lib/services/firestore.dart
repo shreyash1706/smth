@@ -14,13 +14,18 @@ class FireStoreServices{
 
   //READ
   Stream<QuerySnapshot> getTasks()  {
-    final taskStream= taskdoc.orderBy("due").snapshots();
+    final taskStream= taskdoc.orderBy("due").where("completed", isEqualTo: false).snapshots();  
     return  taskStream;
   }
 
   //UPDATE
   Future<void> UpdateTask (String docID,Map <String,dynamic> newTaskMap) async{
     return await taskdoc.doc(docID).update(newTaskMap);
+  }
+
+  Future<void> TaskChecked(String docID) async{
+    bool completed=true;
+    return await taskdoc.doc(docID).update({"completed":true});
   }
 
   //DELETE
