@@ -76,7 +76,8 @@ class _homeState extends State<home> {
                         child: StreamBuilder<QuerySnapshot>(
                           stream: FireStoreServices().getTasks(),
                           builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.isNotEmpty) {
                               return ListView.builder(
                                 itemCount: snapshot.data!.docs.length,
                                 itemBuilder: (context, index) {

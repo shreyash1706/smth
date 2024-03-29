@@ -32,6 +32,13 @@ class FireStoreServices{
   Future<void> DeleteTask(String docID){
     return taskdoc.doc(docID).delete();
   }
+
+//   Future<DateTime> getDueDate(String docID) async {
+//   DocumentSnapshot snapshot = await taskdoc.doc(docID).get();
+//   Timestamp timestamp = snapshot.get("due");
+//   DateTime dueDate = timestamp.toDate();
+//   return dueDate;
+// }
 }
 
   

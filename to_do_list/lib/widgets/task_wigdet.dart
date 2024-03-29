@@ -3,7 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_list/logic/streak_logic.dart';
 import 'package:to_do_list/services/firestore.dart';
+import 'package:to_do_list/widgets/streak_counter.dart';
 
 class TaskWidget extends StatefulWidget {
   final String docID;
@@ -281,10 +284,17 @@ class _TaskWidgetState extends State<TaskWidget> {
                     value: isChecked,
                     shape: CircleBorder(),
                     onChanged: (bool? value) {
-                      setState(() {
+                      setState(() async {
                         isChecked = value!;
                         if (isChecked == true) {
+                          // DateTime due = await FireStoreServices().getDueDate(widget.docID);
+                          DateTime now = DateTime.now();
+                          if (now.difference(due.toDate()).inMinutes >= 1) {
+                            Provider.of<StreakLogic>(context, listen: false)
+                                .incrementCounter();
+                          }
                           FireStoreServices().TaskChecked(widget.docID);
+                          isChecked = false;
                         }
                       });
                     },
@@ -293,6 +303,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //TODO: ADD MISSED TEXT
                         Text(
                           widget.title,
                           style: TextStyle(fontSize: 20),
@@ -304,7 +315,6 @@ class _TaskWidgetState extends State<TaskWidget> {
                               '$dueDate ,',
                               style: TextStyle(fontSize: 17),
                             ),
-                            // SizedBox(width: 3),
                             Text(
                               _selectedTime!.format(context),
                               style: TextStyle(fontSize: 16),

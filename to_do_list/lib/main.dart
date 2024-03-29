@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_list/logic/streak_logic.dart';
 import 'package:to_do_list/pages/home.dart';
 import 'package:to_do_list/pages/calendar.dart';
 import 'package:to_do_list/pages/profile.dart';
@@ -10,7 +12,11 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  StreakLogic streakLogic =StreakLogic();
+  await streakLogic.getCounter();
+  runApp(ChangeNotifierProvider(
+    create: (context) => streakLogic,
+    child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

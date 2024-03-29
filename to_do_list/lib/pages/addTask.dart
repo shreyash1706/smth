@@ -51,9 +51,9 @@ class _AddTaskScreenState extends State<AddTask> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _selectedDate= DateTime.now();
-  TimeOfDay? _selectedTime;
-  String? _selectedRepetition;
-  String? _selectedList;
+  TimeOfDay? _selectedTime= TimeOfDay(hour: 23, minute: 59);
+  String? _selectedRepetition="None";
+  String? _selectedList="Default";
   final bool isTaskCompleted=false;
 
   @override
