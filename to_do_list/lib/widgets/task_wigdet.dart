@@ -12,6 +12,7 @@ class TaskWidget extends StatefulWidget {
   Timestamp due;
   final String repetition;
   final String? list;
+  final Function(String)? onTaskCompleted;
 
   TaskWidget(
       {required this.docID,
@@ -19,7 +20,8 @@ class TaskWidget extends StatefulWidget {
       this.description = "",
       required this.due,
       required this.repetition,
-      this.list});
+      this.list,
+      this.onTaskCompleted,});
 
   @override
   _TaskWidgetState createState() => _TaskWidgetState();
@@ -283,8 +285,9 @@ class _TaskWidgetState extends State<TaskWidget> {
                     onChanged: (bool? value) {
                       setState(() {
                         isChecked = value!;
-                        if (isChecked == true) {
+                        if (isChecked && widget.onTaskCompleted != null) {
                           FireStoreServices().TaskChecked(widget.docID);
+                          widget.onTaskCompleted!(widget.docID);
                         }
                       });
                     },
