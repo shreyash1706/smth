@@ -146,7 +146,7 @@ class _homeState extends State<home> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddTask(),
+                  builder: (context) => AddTask(duedate: DateTime.now()),
                 ),
               );
             },
