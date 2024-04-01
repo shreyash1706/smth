@@ -1,60 +1,67 @@
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
+    var _mediaQuery =MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(110),
-          child: AppBar(
-            backgroundColor: Color.fromARGB(255, 18, 35, 60),
-            elevation: 0,
-            flexibleSpace: Column(
-              children: <Widget>[
-                Row(
+          preferredSize: Size.fromHeight(_mediaQuery.height*0.1),
+          child: Container(
+            color: Color.fromARGB(255, 18, 35, 60),
+            child: SafeArea(
+              
+              child: AppBar(
+                backgroundColor: Color.fromARGB(255, 18, 35, 60),
+                flexibleSpace: Column(
                   children: <Widget>[
-                    GestureDetector(
-                      onTap: () {},
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 18, top: 40, bottom: 38, right: 18),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 33,
-                          backgroundImage: NetworkImage(
-                              'https://icon-library.com/images/default-user-icon/default-user-icon-23.jpg'),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: <Widget>[
-                        Text(
-                          'User 123',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 19,
-                            fontFamily: 'Lato',
-                          ),
-                        ),
                         GestureDetector(
                           onTap: () {},
-                          child: Text(
-                            'meow meow id',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: 'Lato',
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                left: 18, top: 4, bottom: 4, right: 18),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 33,
+                              backgroundImage: NetworkImage(
+                                  'https://icon-library.com/images/default-user-icon/default-user-icon-23.jpg'),
                             ),
                           ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'User',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 19,
+                                fontFamily: 'Lato',
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Text(
+                                'some information...',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Lato',
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
