@@ -44,17 +44,28 @@ class Task {
 
 class AddTask extends StatefulWidget {
   @override
-  _AddTaskScreenState createState() => _AddTaskScreenState();
+  _AddTaskScreenState createState() => _AddTaskScreenState(duedate: duedate);
+
+  DateTime duedate;
+
+  AddTask({required this.duedate});
+
 }
+
+
 
 class _AddTaskScreenState extends State<AddTask> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  DateTime? _selectedDate= DateTime.now();
+  DateTime? _selectedDate;
   TimeOfDay? _selectedTime= TimeOfDay(hour: 23, minute: 59);
   String? _selectedRepetition="None";
   String? _selectedList="Default";
   final bool isTaskCompleted=false;
+
+  _AddTaskScreenState({required DateTime duedate}) {
+    _selectedDate = duedate;
+  }
 
   @override
   Widget build(BuildContext context) {

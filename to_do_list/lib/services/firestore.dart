@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:to_do_list/widgets/task_wigdet.dart';
+
 
 class FireStoreServices{
   final taskdoc =FirebaseFirestore.instance.collection('Tasks');
@@ -33,13 +35,26 @@ class FireStoreServices{
     return taskdoc.doc(docID).delete();
   }
 
+    Stream<QuerySnapshot> getTasksForDay(DateTime day) {
+    DateTime startOfDay = DateTime(day.year, day.month, day.day);
+    DateTime endOfDay = startOfDay.add(Duration(days: 1));
+    return FirebaseFirestore.instance
+        .collection('Tasks')
+        .where('due', isGreaterThanOrEqualTo: startOfDay, isLessThan: endOfDay)
+        .where('completed',isEqualTo: false)
+        .snapshots();
+  }
+  
+}
+
+
 //   Future<DateTime> getDueDate(String docID) async {
 //   DocumentSnapshot snapshot = await taskdoc.doc(docID).get();
 //   Timestamp timestamp = snapshot.get("due");
 //   DateTime dueDate = timestamp.toDate();
 //   return dueDate;
 // }
-}
+
 
   
 
