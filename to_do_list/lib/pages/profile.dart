@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:to_do_list/logic/streak_logic.dart';
+import 'package:to_do_list/services/firestore.dart';
 
 class Profile extends StatelessWidget {
+  Future<void> _updateCounts() async {
+    await FireStoreServices().countCompletedTasks();
+    await FireStoreServices().countPendingTasks();
+    await StreakLogic().getCounter();
+    await StreakLogic().getMaxCounter();
+    
+  }
   
   @override
   Widget build(BuildContext context) {
+    final streakLogic = Provider.of<StreakLogic>(context);
+    int streakCounter = streakLogic.streakCounter;
+    int maxCounter = streakLogic.maxCounter;
     var _mediaQuery =MediaQuery.of(context).size;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -81,20 +95,47 @@ class Profile extends StatelessWidget {
             ),
             SizedBox(height: 5),
             
-            Expanded(
-              child: ListView(
-                children: [
-                  buildCategoryRow(context, ['Current Task Streak', 1, Icons.trending_up]),
-                  buildCategoryRow(context, ['Maximum Task Streak', 2, Icons.leaderboard]),
-                  buildCategoryRow(context, ['Completed Tasks', 3, Icons.check_circle]),
-                  buildCategoryRow(context, ['Pending Task', 4, Icons.access_time]),
-                ],
-              ),
+            FutureBuilder(
+              future: _updateCounts(),
+              builder: (context,snapshot) {
+                return Expanded(
+                  child: ListView(
+                    children: [
+                      buildCategoryRow(context, ['Current Task Streak',streakLogic.streakCounter , Icons.trending_up]),
+                      buildCategoryRow(context, ['Maximum Task Streak', streakLogic.maxCounter, Icons.leaderboard]),
+                      FutureBuilder<int>(
+    future: FireStoreServices().countCompletedTasks(),
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        return buildCategoryRow(context, ['Completed Tasks', snapshot.data ?? 0, Icons.check_circle]);
+      }
+    },
+  ),
+                    FutureBuilder<int>(
+    future: FireStoreServices().countPendingTasks(),
+    builder: (context, snapshot) {
+      // if (snapshot.connectionState == ConnectionState.waiting) {
+      //   return CircularProgressIndicator(); // Show a loading indicator while fetching data
+      if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else {
+        return buildCategoryRow(context, ['Pending Task', snapshot.data ?? 0, Icons.access_time]);
+      }
+    },
+  ),
+                    ]
+                  ),
+                );
+              }
             ),
           ],
         ),
       ),
+      
     );
+      
   }
 
   Widget buildCategoryRow(BuildContext context, List<dynamic> categoryData) {
@@ -142,10 +183,7 @@ class Profile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: 34),
-                  Text(
-                    '0',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  
                   Text(
                     '$integerValue',
                     style: TextStyle(fontSize: 18, color: Colors.white),

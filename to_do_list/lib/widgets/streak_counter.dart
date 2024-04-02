@@ -36,7 +36,6 @@ class _StreakCounterState extends State<StreakCounter> {
 
   @override
   Widget build(BuildContext context) {
-    print('State Rebuilt');
     final streakLogic = Provider.of<StreakLogic>(context);
     int streakCounter = streakLogic.streakCounter;
     int maxCounter = streakLogic.maxCounter;
@@ -76,7 +75,7 @@ class _StreakCounterState extends State<StreakCounter> {
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
                 Text(
-                  'Current Day Streak',
+                  'Max Task \nStreak',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white),
                 )

@@ -14,6 +14,7 @@ void main() async{
   );
   StreakLogic streakLogic =StreakLogic();
   await streakLogic.getCounter();
+  await streakLogic.getMaxCounter();
   runApp(ChangeNotifierProvider(
     create: (context) => streakLogic,
     child: MyApp()));

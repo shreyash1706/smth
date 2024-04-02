@@ -23,6 +23,7 @@ class StreakLogic extends ChangeNotifier {
   Future<void> getMaxCounter() async {
     final SharedPreferences prefs = await _prefs;
     _maxCounter = prefs.getInt("max_counter") ?? 0;
+    notifyListeners();
   }
 
   Future<void> incrementCounter() async {

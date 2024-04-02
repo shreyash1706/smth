@@ -44,8 +44,27 @@ class FireStoreServices{
         .where('completed',isEqualTo: false)
         .snapshots();
   }
-  
+
+  int completedTasksCount = 0;
+  int get completedtasks=>completedTasksCount;
+  int pendingTasksCount = 0;
+  int get pendingtasks => pendingTasksCount;
+
+   Future<int> countCompletedTasks() async {
+  QuerySnapshot querySnapshot =
+      await taskdoc.where("completed", isEqualTo: true).get();
+  return querySnapshot.size;
 }
+
+
+  Future<int> countPendingTasks() async {
+  QuerySnapshot querySnapshot =
+      await taskdoc.where("completed", isEqualTo: false).get();
+  return querySnapshot.size;
+}
+}
+  
+
 
 
 //   Future<DateTime> getDueDate(String docID) async {

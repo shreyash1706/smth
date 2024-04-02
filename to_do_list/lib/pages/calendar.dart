@@ -89,6 +89,7 @@ class _CalenderState extends State<Calendar> {
       return Center(child: Text('Error: ${snapshot.error}'));
     } else if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
       return SizedBox(    
+        //TODO: Solve height changing issue 
         height: MediaQuery.of(context).size.height * 0.42, // Adjust the height as needed
         child: ListView.builder(
           itemCount: snapshot.data!.docs.length,
@@ -107,7 +108,7 @@ class _CalenderState extends State<Calendar> {
         ),
       );
     } else {
-      return Center(child: Text('No Tasks'));
+      return Container(height: MediaQuery.of(context).size.height * 0.42, child: Center(child: Text('No Tasks')));
     }
   },
 )

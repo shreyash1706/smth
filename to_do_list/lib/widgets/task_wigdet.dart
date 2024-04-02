@@ -289,7 +289,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                         if (isChecked == true) {
                           // DateTime due = await FireStoreServices().getDueDate(widget.docID);
                           DateTime now = DateTime.now();
-                          if (now.difference(due.toDate()).inMinutes >= 1) {
+                          if (now.difference(due.toDate()).inMinutes < 1) {
                             Provider.of<StreakLogic>(context, listen: false)
                                 .incrementCounter();
                           }
