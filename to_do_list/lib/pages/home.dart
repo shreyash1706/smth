@@ -116,22 +116,10 @@ class _homeState extends State<home> {
                   ],
                 ),
               ),
-              Container(
-                  height: _mediaQuery.height,
-                  width: _mediaQuery.width,
-                  color: const Color.fromARGB(255, 19, 32, 48),
-                  child: Column()),
-              Container(
-                  height: _mediaQuery.height,
-                  width: _mediaQuery.width,
-                  color: const Color.fromARGB(255, 19, 32, 48),
-                  child: Column()),
-              Container(
-                  height: _mediaQuery.height,
-                  width: _mediaQuery.width,
-                  color: const Color.fromARGB(255, 19, 32, 48),
-                  child: Column()),
-            ],
+              displayTaskinHome("Work"),
+              displayTaskinHome("Personal"),
+              displayTaskinHome("Wishlist"),
+            ],    
           ),
           floatingActionButton: FloatingActionButton(
             child: const Icon(
@@ -152,5 +140,60 @@ class _homeState extends State<home> {
             },
           ),
         ));
+  }
+  Widget displayTaskinHome(String tab){
+    var _mediaQuery= MediaQuery.of(context).size;
+    return Container(
+                height: _mediaQuery.height,
+                width: _mediaQuery.width,
+                color: const Color.fromARGB(255, 19, 32, 48),
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        height: _mediaQuery.height * 0.606,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FireStoreServices().getTasksbyTab(tab),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData &&
+                                snapshot.data!.docs.isNotEmpty) {
+                              return ListView.builder(
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  DocumentSnapshot dS =
+                                      snapshot.data!.docs[index];
+                                  String docID = dS.id;
+                                  return TaskWidget(
+                                    docID: docID,
+                                    title: dS['title'],
+                                    description: dS['description'],
+                                    due: dS['due'],
+                                    repetition: dS['repetition'],
+                                    list: dS['list'],
+                                  );
+                                },
+                              );
+                            } else {
+                              return Center(
+                                  child: Text(
+                                "No Tasks Yet",
+                                style: TextStyle(color: Colors.white),
+                              ));
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        height: _mediaQuery.height * 0.135,
+                        width: _mediaQuery.width * 0.8,
+                        child: StreakCounter(),
+                      ),
+                    ),
+                  ],
+                ),
+              );
   }
 }

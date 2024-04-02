@@ -20,6 +20,12 @@ class FireStoreServices{
     return  taskStream;
   }
 
+  Stream<QuerySnapshot> getTasksbyTab(String tab)  {
+    final taskStream= taskdoc.orderBy("due").where("completed", isEqualTo: false).where("list",isEqualTo: tab).snapshots();  
+    return  taskStream;
+  }
+
+
   //UPDATE
   Future<void> UpdateTask (String docID,Map <String,dynamic> newTaskMap) async{
     return await taskdoc.doc(docID).update(newTaskMap);
